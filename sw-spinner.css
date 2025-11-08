@@ -63,6 +63,214 @@
     box-shadow: var(--boxShadow);
 } */
 
+.sw-mysterious-disc {
+    --s: var(--size, 100px);
+    width: calc(var(--s) * 3);
+    height: calc(var(--s) * 3);
+    display: grid;
+    place-items: center;
+    &::before {
+        content: "";
+        width: var(--s);
+        height: var(--s);
+        border-radius: 50%;
+        box-sizing: border-box;
+        animation: sw-mysterious-disc 3s ease-in-out infinite;
+        --color1: hsla(214, 68%, 20%);
+        --color2: hsla(214, 68%, 56%);
+        --color3: hsla(214, 68%, 80%);
+    }
+}
+
+@keyframes sw-mysterious-disc {
+
+    0%,
+    100% {
+        border-top: 70px solid var(--color1);
+        border-right: 100px solid var(--color1);
+        border-bottom: 100px solid var(--color2);
+        border-left: 100px solid var(--color1);
+        box-shadow: 0px 20px 5px 5px var(--color3);
+    }
+
+    25% {
+        border-top: 100px solid var(--color1);
+        border-right: 70px solid var(--color1);
+        border-bottom: 100px solid var(--color1);
+        border-left: 100px solid var(--color2);
+        box-shadow: -20px 0px 5px 5px var(--color3);
+    }
+
+    50% {
+        border-top: 100px solid var(--color2);
+        border-right: 100px solid var(--color1);
+        border-bottom: 70px solid var(--color1);
+        border-left: 100px solid var(--color1);
+        box-shadow: 0px -20px 5px 5px var(--color3);
+    }
+
+    75% {
+        border-top: 100px solid var(--color1);
+        border-right: 100px solid var(--color2);
+        border-bottom: 100px solid var(--color1);
+        border-left: 70px solid var(--color1);
+        box-shadow: 20px 0px 5px 5px var(--color3);
+    }
+}
+
+.sw-cool {
+    --diameter: 100px;
+    --color: midnightblue;
+    --offset: .8;
+    /* Increasing fourth value will increase circle size */
+    --br: calc(var(--diameter) * var(--offset)) calc(var(--diameter) * var(--offset)) 0px 0px var(--color);
+    --brBig: calc(var(--diameter) * var(--offset)) calc(var(--diameter) * var(--offset)) 0px calc(var(--diameter)/3) var(--color);
+    --bl: calc(var(--diameter) * -1 * var(--offset)) calc(var(--diameter) * var(--offset)) 0px 0px var(--color);
+    --blBig: calc(var(--diameter) * -1 * var(--offset)) calc(var(--diameter) * var(--offset)) 0px calc(var(--diameter)/3) var(--color);
+    --tr: calc(var(--diameter) * var(--offset)) calc(var(--diameter) * -1 * var(--offset)) 0px 0px var(--color);
+    --trBig: calc(var(--diameter) * var(--offset)) calc(var(--diameter) * -1 * var(--offset)) 0px calc(var(--diameter)/3) var(--color);
+    --tl: calc(var(--diameter) * -1 * var(--offset)) calc(var(--diameter) * -1 * var(--offset)) 0px 0px var(--color);
+    --tlBig: calc(var(--diameter) * -1 * var(--offset)) calc(var(--diameter) * -1 * var(--offset)) 0px calc(var(--diameter)/3) var(--color);
+    background-color: white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    width: var(--diameter);
+    height: var(--diameter);
+    animation: cool 5s linear infinite, spin 10s linear infinite reverse;
+
+    &::before {
+        content: "";
+        width: calc(var(--diameter)/2);
+        height: calc(var(--diameter)/2);
+        grid-area: 1/1/1/1;
+        background-color: var(--color);
+        animation: spin 1.25s ease-in-out infinite reverse;
+    }
+}
+
+
+@keyframes cool {
+
+    0% {
+        box-shadow: var(--tr), var(--tr), var(--tr), var(--trBig);
+    }
+
+    3.57% {
+        box-shadow: var(--br), var(--tr), var(--tr), var(--trBig);
+    }
+
+    7.14% {
+        box-shadow: var(--bl), var(--br), var(--tr), var(--trBig);
+    }
+
+    10.71% {
+        box-shadow: var(--tl), var(--bl), var(--br), var(--trBig);
+    }
+
+    14.29% {
+        box-shadow: var(--tr), var(--tl), var(--bl), var(--trBig);
+    }
+
+    17.86% {
+        box-shadow: var(--tr), var(--tr), var(--tl), var(--trBig);
+    }
+
+    21.43% {
+        box-shadow: var(--tr), var(--tr), var(--tr), var(--trBig);
+    }
+
+    25% {
+        box-shadow: var(--br), var(--br), var(--br), var(--brBig);
+    }
+
+    28.57% {
+        box-shadow: var(--bl), var(--br), var(--br), var(--brBig);
+    }
+
+    32.14% {
+        box-shadow: var(--tl), var(--bl), var(--br), var(--brBig);
+    }
+
+    35.71% {
+        box-shadow: var(--tr), var(--tl), var(--bl), var(--brBig);
+    }
+
+    39.29% {
+        box-shadow: var(--br), var(--tr), var(--tl), var(--brBig);
+    }
+
+    42.86% {
+        box-shadow: var(--br), var(--br), var(--tr), var(--brBig);
+    }
+
+    46.43% {
+        box-shadow: var(--br), var(--br), var(--br), var(--brBig);
+    }
+
+    50% {
+
+        box-shadow: var(--bl), var(--bl), var(--bl), var(--blBig);
+    }
+
+    53.57% {
+        box-shadow: var(--tl), var(--bl), var(--bl), var(--blBig);
+    }
+
+    57.14% {
+        box-shadow: var(--tr), var(--tl), var(--bl), var(--blBig);
+    }
+
+    60.71% {
+        box-shadow: var(--br), var(--tr), var(--tl), var(--blBig);
+    }
+
+    64.29% {
+        box-shadow: var(--bl), var(--br), var(--tr), var(--blBig);
+    }
+
+    67.86% {
+        box-shadow: var(--bl), var(--bl), var(--br), var(--blBig);
+    }
+
+    71.43% {
+        box-shadow: var(--bl), var(--bl), var(--bl), var(--blBig);
+    }
+
+    75% {
+        box-shadow: var(--tl), var(--tl), var(--tl), var(--tlBig);
+    }
+
+    78.57% {
+        box-shadow: var(--tr), var(--tl), var(--tl), var(--tlBig);
+    }
+
+    82.14% {
+        box-shadow: var(--br), var(--tr), var(--tl), var(--tlBig);
+    }
+
+    85.71% {
+        box-shadow: var(--bl), var(--br), var(--tr), var(--tlBig);
+    }
+
+    89.29% {
+        box-shadow: var(--tl), var(--bl), var(--br), var(--tlBig);
+    }
+
+    92.86% {
+        box-shadow: var(--tl), var(--tl), var(--bl), var(--tlBig);
+    }
+
+    96.43% {
+        box-shadow: var(--tl), var(--tl), var(--tl), var(--tlBig);
+    }
+
+    100% {
+        box-shadow: var(--tr), var(--tr), var(--tr), var(--trBig);
+    }
+
+}
+
 
 .sw-shuffle {
     all: unset;
