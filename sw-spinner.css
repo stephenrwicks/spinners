@@ -1,0 +1,68 @@
+@keyframes sw-rotate {
+    100% {
+        rotate: 360deg;
+    }
+}
+
+
+.sw-simple {
+    all: unset;
+
+    --s: var(--size, 20px);
+    --c: var(--color, #1b75be);
+    --d: var(--duration, 3s);
+
+    height: 1px;
+    width: 1px;
+    box-sizing: border-box;
+    animation: sw-rotate var(--d) linear infinite;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin: calc(var(--offset) * 1.5);
+
+    --offset: calc(var(--s) * 3);
+    --top: 0px calc(var(--offset) * -1) 0px var(--s) var(--c);
+    --topRight: calc(var(--offset) * cos(45deg)) calc(var(--offset) * -1 * sin(45deg)) 0px var(--s) var(--c);
+    --right: calc(var(--offset)) 0px 0px var(--s) var(--c);
+    --bottomRight: calc(var(--offset) * cos(45deg)) calc(var(--offset) * sin(45deg)) 0px var(--s) var(--c);
+    --bottom: 0px calc(var(--offset)) 0px var(--s) var(--c);
+    --bottomLeft: calc(var(--offset) * -1 * cos(45deg)) calc(var(--offset) * sin(45deg)) 0px var(--s) var(--c);
+    --left: calc(var(--offset) * -1) 0px 0px var(--s) var(--c);
+    --topLeft: calc(var(--offset) * -1 * cos(45deg)) calc(var(--offset) * -1 * sin(45deg)) 0px var(--s) var(--c);
+    --boxShadow: var(--top), var(--topRight), var(--right), var(--bottomRight), var(--bottom), var(--bottomLeft), var(--left), var(--topLeft);
+    box-shadow: var(--boxShadow);
+}
+
+
+/* .simple-multicolor {
+    all: unset;
+    --s: 20px;
+    --offset: calc(var(--s) * 3);
+    margin: calc(var(--offset) * 1.5);
+    height: 1px;
+    width: 1px;
+    box-sizing: border-box;
+    animation: sw-rotate 5s linear infinite;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    --color1: hsla(0, 80%, 30%, 0.5);
+    --color2: hsla(30, 80%, 30%, 0.5);
+    --color3: hsla(60, 80%, 30%, 0.5);
+    --color4: hsla(120, 80%, 30%, 0.5);
+    --color5: hsla(180, 80%, 30%, 0.5);
+    --color6: hsla(210, 80%, 30%, 0.5);
+    --color7: hsla(270, 80%, 30%, 0.5);
+    --color8: hsla(330, 80%, 30%, 0.5);
+    --top: 0px calc(var(--offset) * -1) 0px var(--s) var(--color1);
+    --topRight: calc(var(--offset) * cos(45deg)) calc(var(--offset) * -1 * sin(45deg)) 0px var(--s) var(--color2);
+    --right: calc(var(--offset)) 0px 0px var(--s) var(--color3);
+    --bottomRight: calc(var(--offset) * cos(45deg)) calc(var(--offset) * sin(45deg)) 0px var(--s) var(--color4);
+    --bottom: 0px calc(var(--offset)) 0px var(--s) var(--color5);
+    --bottomLeft: calc(var(--offset) * -1 * cos(45deg)) calc(var(--offset) * sin(45deg)) 0px var(--s) var(--color6);
+    --left: calc(var(--offset) * -1) 0px 0px var(--s) var(--color7);
+    --topLeft: calc(var(--offset) * -1 * cos(45deg)) calc(var(--offset) * -1 * sin(45deg)) 0px var(--s) var(--color8);
+    --boxShadow: var(--top), var(--topRight), var(--right), var(--bottomRight), var(--bottom), var(--bottomLeft), var(--left), var(--topLeft);
+    box-shadow: var(--boxShadow);
+} */

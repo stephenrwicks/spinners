@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sw-spinner</title>
+  <link href="sw-spinner.css" rel="stylesheet" />
+</head>
+
+<body style="display: grid; margin: 0px; padding: 0px 50px; height: 100vh; overflow-y: auto;">
+  <main style="display: flex; flex-flow: row wrap;">
+
+    <!-- 
+    Simple 8-circle spinner. 
+    Defaults:
+    --color = #1b75be;
+    --size = 20px;
+    --duration = 3s;
+      -->
+    <section style="display: grid; gap: 20px; grid-auto-rows: min-content; height: min-content;">
+      <div class="sw-simple" style="
+      --color: magenta; 
+      --size: 2rem; 
+      --duration: 3s;
+    "></div>
+      <button onclick="showCss('sw-simple')">.simple</button>
+    </section>
+
+
+  </main>
+  <script>
+    const showCss = async (className) => {
+      className = className.trim();
+      const sheet = document.styleSheets[0];
+      const res = await fetch(sheet.href);
+      const css = await res.text();
+      const classRegex = new RegExp(`\\.${className}\\s*\\{[^}]*\\}`, 'g');
+      const classMatch = css.match(classRegex);
+      let output = classMatch.join('\n\n');
+
+      const animationNameRegex = /animation(?:-name)?:\s*([^;}]+)/g;
+      const names = [];
+      let m;
+      while ((m = animationNameRegex.exec(output))) {
+        m[1]
+          .split(',')
+          .map(x => x.trim().split(/\s+/)[0])
+          .filter(Boolean)
+          .forEach(n => names.push(n));
+      }
+      const uniqueNames = [...new Set(names)];
+
+      // append matching @keyframes blocks
+      for (const name of uniqueNames) {
+        const keyframeRegex = new RegExp(`@keyframes\\s+${name}\\s*\\{[\\s\\S]*?\\}`, 'gi');
+        const keyframeMatches = css.match(keyframeRegex);
+        if (keyframeMatches) output += '\n\n' + keyframeMatches.join('\n\n');
+      }
+
+      const dialog = document.createElement('dialog');
+      dialog.style.display = 'grid';
+      dialog.style.gap = '20px';
+      dialog.style.width = 'fit-content';
+      dialog.style.overflowY = 'auto';
+      dialog.style.whiteSpace = 'pre-wrap';
+      dialog.style.wordBreak = 'break-word';
+      dialog.style.fontFamily = 'monospace';
+      dialog.style.padding = '1rem';
+      dialog.style.border = '0px';
+      dialog.style.boxShadow = '0px 0px 0px max(100vh, 100vw) rgba(0, 0, 0, .9)';
+
+      const content = document.createElement('div');
+      content.textContent = output.trim();
+      content.style.maxHeight = '80vh';
+
+      const closeButton = document.createElement('button');
+      closeButton.textContent = 'Close';
+      closeButton.style.cursor = 'pointer';
+      closeButton.style.justifySelf = 'end';
+
+      dialog.addEventListener('cancel', () => {
+        dialog.remove();
+      });
+
+      closeButton.addEventListener('click', () => {
+        dialog.remove();
+      });
+
+
+      dialog.append(content, closeButton);
+      document.body.append(dialog);
+      dialog.showModal();
+    };
+  </script>
+</body>
+
+</html>
