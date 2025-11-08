@@ -8,54 +8,87 @@
   <link href="sw-spinner.css" rel="stylesheet" />
 </head>
 
-<body style="display: grid; margin: 0px; padding: 0px 50px; height: 100vh; overflow-y: auto;">
-  <main style="display: flex; flex-flow: row wrap;">
+<body style="display: grid; gap: 50px; margin: 0px; padding: 0px 50px; height: 100vh; overflow-y: auto;">
+  <main style="display: grid; padding: 50px 0px; gap: 50px">
 
-    <!-- 
-    Simple 8-circle spinner. 
-    Defaults:
-    --color = #1b75be;
-    --size = 20px;
-    --duration = 3s;
-      -->
-    <section style="display: grid; gap: 20px; grid-auto-rows: min-content; height: min-content;">
+    <section style="display: grid; justify-items: center; gap: 20px; grid-auto-rows: min-content; height: min-content;">
       <div class="sw-simple" style="
-      --color: magenta; 
+      --color: pink; 
       --size: 2rem; 
-      --duration: 3s;
+      --duration: 2.3s;
     "></div>
-      <button onclick="showCss('sw-simple')">.simple</button>
+      <pre>
+        Parameters:
+        --color = #1b75be;
+        --size = 20px;
+        --duration = 3s;
+      </pre>
+      <button onclick="showCss('sw-simple')" style="display: block; width: fit-content;">.sw-simple</button>
+    </section>
+
+    <section style="display: grid; justify-items: center; gap: 20px; grid-auto-rows: min-content; height: min-content;">
+      <div class="sw-shuffle" style=" 
+      --duration: 48s;
+    "></div>
+      <pre>
+        Parameters:
+        --duration = 48s;
+      </pre>
+      <button onclick="showCss('sw-shuffle')" style="display: block; width: fit-content;">.sw-shuffle</button>
     </section>
 
 
   </main>
   <script>
+    // This script is mostly AI
     const showCss = async (className) => {
       className = className.trim();
+      const outerHTML = document.querySelector(`.${className}`)?.outerHTML?.replace(/\s{2,}/g, ' ') ?? '';
+
       const sheet = document.styleSheets[0];
       const res = await fetch(sheet.href);
       const css = await res.text();
       const classRegex = new RegExp(`\\.${className}\\s*\\{[^}]*\\}`, 'g');
       const classMatch = css.match(classRegex);
-      let output = classMatch.join('\n\n');
-
-      const animationNameRegex = /animation(?:-name)?:\s*([^;}]+)/g;
+      let output = [outerHTML, ...(classMatch ?? [])].filter(Boolean).join('\n\n');
+      const animationRegex = /animation(?:-name)?\s*:\s*([^;]+)/g;
       const names = [];
       let m;
-      while ((m = animationNameRegex.exec(output))) {
+      while ((m = animationRegex.exec(output))) {
         m[1]
           .split(',')
-          .map(x => x.trim().split(/\s+/)[0])
+          .map(s => s.trim())
           .filter(Boolean)
-          .forEach(n => names.push(n));
+          .forEach(segment => {
+            const keyframeName = segment.split(/\s+/)[0]; // first token is the keyframe name every time or this breaks
+            if (keyframeName) names.push(keyframeName);
+          });
       }
       const uniqueNames = [...new Set(names)];
 
       // append matching @keyframes blocks
       for (const name of uniqueNames) {
-        const keyframeRegex = new RegExp(`@keyframes\\s+${name}\\s*\\{[\\s\\S]*?\\}`, 'gi');
-        const keyframeMatches = css.match(keyframeRegex);
-        if (keyframeMatches) output += '\n\n' + keyframeMatches.join('\n\n');
+        const startIndex = css.indexOf(`@keyframes ${name}`);
+        if (startIndex === -1) continue;
+        let braceCount = 0;
+        let endIndex = startIndex;
+        let inBlock = false;
+        while (endIndex < css.length) {
+          const char = css[endIndex];
+          if (char === '{') {
+            braceCount++;
+            inBlock = true;
+          } else if (char === '}') {
+            braceCount--;
+            if (inBlock && braceCount === 0) {
+              endIndex++;
+              break;
+            }
+          }
+          endIndex++;
+        }
+        const fullKeyframe = css.slice(startIndex, endIndex);
+        output += '\n\n' + fullKeyframe;
       }
 
       const dialog = document.createElement('dialog');
@@ -65,30 +98,31 @@
       dialog.style.overflowY = 'auto';
       dialog.style.whiteSpace = 'pre-wrap';
       dialog.style.wordBreak = 'break-word';
-      dialog.style.fontFamily = 'monospace';
-      dialog.style.padding = '1rem';
+      dialog.style.fontFamily = `'Courier New', monospace`;
+      dialog.style.fontSize = '.8em';
+      dialog.style.maxHeight = '80vh';
+      dialog.style.padding = '3rem';
       dialog.style.border = '0px';
-      dialog.style.boxShadow = '0px 0px 0px max(100vh, 100vw) rgba(0, 0, 0, .9)';
-
-      const content = document.createElement('div');
-      content.textContent = output.trim();
-      content.style.maxHeight = '80vh';
-
-      const closeButton = document.createElement('button');
-      closeButton.textContent = 'Close';
-      closeButton.style.cursor = 'pointer';
-      closeButton.style.justifySelf = 'end';
+      dialog.style.boxShadow = '0px 0px 0px max(100vh, 100vw) rgba(34, 139, 34, .2)';
+      dialog.style.backgroundColor = 'mintcream';
+      dialog.textContent = output.trim();
 
       dialog.addEventListener('cancel', () => {
         dialog.remove();
       });
+      dialog.addEventListener('pointerdown', (e) => {
+        const rect = dialog.getBoundingClientRect();
+        const inside =
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom;
 
-      closeButton.addEventListener('click', () => {
-        dialog.remove();
+        if (!inside) {
+          dialog.remove();
+        }
       });
 
-
-      dialog.append(content, closeButton);
       document.body.append(dialog);
       dialog.showModal();
     };

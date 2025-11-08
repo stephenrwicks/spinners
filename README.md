@@ -1,2 +1,1 @@
-# spinners
-single-div spinners in plain css
+Single-div spinners in plain css with keyframes. With custom properties we can give them parameters like style="--color: green", etc. but also provide fallbacks.
